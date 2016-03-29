@@ -4,12 +4,7 @@ import { Button, Glyphicon, Input, Nav, Navbar, Image, NavItem, NavDropdown, Men
 class Header extends React.Component{
   render () {
     var myUser = this.props.loggedInUser;
-    var myButton = <Button>Empty Button</Button>;
-    if (myUser == "Oscar") {
-      myButton = <Button bsStyle="info">The user is Oscar</Button>;
-    } else {
-      myButton = <Button bsStyle="danger">The user is not Oscar</Button>;
-    }
+
 
     return (
       <div>
@@ -31,7 +26,7 @@ class Header extends React.Component{
             </Nav>
           </Navbar.Collapse>
         </Navbar>
-        {myButton}
+        
       </div>
     )
   }

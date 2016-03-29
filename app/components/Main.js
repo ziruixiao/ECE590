@@ -67,7 +67,7 @@ Main.propTypes = {
 };
 
 Main.defaultProps = {
-  loggedInUser: "Oscar"
+  loggedInUser: "notOscar"
 }
 
 Main.contextTypes = {
