@@ -13,7 +13,7 @@ class TermsView extends React.Component{
     return (
       <div>
 
-
+        Terms View
       </div>
     )
   }

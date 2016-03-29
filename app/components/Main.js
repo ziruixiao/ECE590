@@ -12,7 +12,7 @@ class Main extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-
+      loggedInUser: props.loggedInUser
     };
   }
 
@@ -36,7 +36,7 @@ class Main extends React.Component {
   render() {
     return (
       <div className="main-container">
-        <Header />
+        <Header loggedInUser={this.state.loggedInUser}/>
         <br />
         <br />
         <br />
@@ -63,11 +63,11 @@ class Main extends React.Component {
 
 
 Main.propTypes = {
-
+  loggedInUser: React.PropTypes.string
 };
 
 Main.defaultProps = {
-
+  loggedInUser: "Oscar"
 }
 
 Main.contextTypes = {

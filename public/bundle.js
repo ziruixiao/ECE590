@@ -22978,7 +22978,9 @@
 	    _classCallCheck(this, Main);
 
 	    _get(Object.getPrototypeOf(Main.prototype), 'constructor', this).call(this, props);
-	    this.state = {};
+	    this.state = {
+	      loggedInUser: props.loggedInUser
+	    };
 	  }
 
 	  _createClass(Main, [{
@@ -23008,7 +23010,7 @@
 	      return _react2['default'].createElement(
 	        'div',
 	        { className: 'main-container' },
-	        _react2['default'].createElement(_Header2['default'], null),
+	        _react2['default'].createElement(_Header2['default'], { loggedInUser: this.state.loggedInUser }),
 	        _react2['default'].createElement('br', null),
 	        _react2['default'].createElement('br', null),
 	        _react2['default'].createElement('br', null),
@@ -23044,9 +23046,13 @@
 
 	;
 
-	Main.propTypes = {};
+	Main.propTypes = {
+	  loggedInUser: _react2['default'].PropTypes.string
+	};
 
-	Main.defaultProps = {};
+	Main.defaultProps = {
+	  loggedInUser: "Oscar"
+	};
 
 	Main.contextTypes = {
 	  router: _react2['default'].PropTypes.func.isRequired
@@ -23093,6 +23099,26 @@
 	  _createClass(Header, [{
 	    key: 'render',
 	    value: function render() {
+	      var myUser = this.props.loggedInUser;
+	      var myButton = _react2['default'].createElement(
+	        _reactBootstrap.Button,
+	        null,
+	        'Empty Button'
+	      );
+	      if (myUser == "Oscar") {
+	        myButton = _react2['default'].createElement(
+	          _reactBootstrap.Button,
+	          { bsStyle: 'info' },
+	          'The user is Oscar'
+	        );
+	      } else {
+	        myButton = _react2['default'].createElement(
+	          _reactBootstrap.Button,
+	          { bsStyle: 'danger' },
+	          'The user is not Oscar'
+	        );
+	      }
+
 	      return _react2['default'].createElement(
 	        'div',
 	        null,
@@ -23108,7 +23134,7 @@
 	              _react2['default'].createElement(
 	                'a',
 	                { href: '#' },
-	                'ECE590'
+	                this.props.loggedInUser
 	              )
 	            ),
 	            _react2['default'].createElement(_reactBootstrap.Navbar.Toggle, null)
@@ -23141,7 +23167,8 @@
 	              )
 	            )
 	          )
-	        )
+	        ),
+	        myButton
 	      );
 	    }
 	  }]);
@@ -40182,7 +40209,15 @@
 	  _createClass(AboutView, [{
 	    key: 'render',
 	    value: function render() {
-	      return _react2['default'].createElement('div', null);
+	      return _react2['default'].createElement(
+	        'div',
+	        null,
+	        _react2['default'].createElement(
+	          'h2',
+	          null,
+	          'About Page'
+	        )
+	      );
 	    }
 	  }]);
 
@@ -40288,7 +40323,11 @@
 	  _createClass(TermsView, [{
 	    key: 'render',
 	    value: function render() {
-	      return _react2['default'].createElement('div', null);
+	      return _react2['default'].createElement(
+	        'div',
+	        null,
+	        'Terms View'
+	      );
 	    }
 	  }]);
 
