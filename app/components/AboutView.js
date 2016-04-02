@@ -50,6 +50,16 @@ class AboutView extends React.Component{
     });
   }
 
+    sendMessage() {
+    // modify the array to add a new entry
+    var currentPhoneNumbers = this.state.phoneNumbers;
+    console.log("Send Message");
+    console.log(currentPhoneNumbers);
+    this.setState({
+      
+    });
+  }
+
   handleChange(e) {
     var currentPhoneNumbers = this.state.phoneNumbers;
     currentPhoneNumbers[e.target.name] = e.target.value;
@@ -57,9 +67,20 @@ class AboutView extends React.Component{
       phoneNumbers: currentPhoneNumbers
     });
   }
+
+
+  saveMessage(e) {
+    var currentMessage = e.target.value;
+    this.setState({
+      message: currentMessage
+    });
+  }
+
   render(){
     console.log(this.state.phoneNumbers);
+    console.log(this.state.message);
     var phoneInputs = this.state.phoneNumbers.map((input, index) =>
+
       <Input key={index}
              name={index}
              type="text"
@@ -70,6 +91,10 @@ class AboutView extends React.Component{
       />
     );
 
+    var messageInput = (<Input type='text' 
+                         onChange={this.saveMessage.bind(this)}
+                         placeholder='Enter message'/>);
+
     return (
       <div>
         <h2>Add Phone Numbers</h2>
@@ -77,20 +102,23 @@ class AboutView extends React.Component{
         <div className="phone-inputs">
           { phoneInputs }
         </div>
-
+        { messageInput}
         <Button onClick={this.addField.bind(this)} bsStyle="info">Add Phone Number</Button>
 
+        <Button onClick={this.sendMessage.bind(this)} bsStyle="info">Send Message</Button>
       </div>
     )
   }
 };
 
 AboutView.propTypes = {
-  phoneNumbers: React.PropTypes.array
+  phoneNumbers: React.PropTypes.array,
+ message: React.PropTypes.string
 };
 
 AboutView.defaultProps = {
-  phoneNumbers: []
+  phoneNumbers: [],
+ message: ""
 };
 
 AboutView.contextTypes = {
