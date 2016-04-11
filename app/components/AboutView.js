@@ -13,6 +13,7 @@ import {
 class AboutView extends React.Component{
   constructor(props) {
     super(props);
+    
     this.state = {
       phoneNumbers: props.phoneNumbers
     };
@@ -53,8 +54,24 @@ class AboutView extends React.Component{
     sendMessage() {
     // modify the array to add a new entry
     var currentPhoneNumbers = this.state.phoneNumbers;
+    var currentMessage = this.state.message;
     console.log("Send Message");
+    console.log(currentMessage);
     console.log(currentPhoneNumbers);
+    var datahash = {};
+    datahash["text[tonumber]"]='+19492903587';
+    datahash["text[fromnumber]"]='+14694163155';
+    datahash["text[message]"]=currentMessage;
+    var $ = require ('jquery')
+    $.ajax({
+    type: "POST",
+    url: 'http://ece590twilio.herokuapp.com/texts',
+    data: datahash,
+    dataType: 'json'
+    });
+  
+    
+
     this.setState({
       
     });
@@ -77,8 +94,8 @@ class AboutView extends React.Component{
   }
 
   render(){
-    console.log(this.state.phoneNumbers);
-    console.log(this.state.message);
+    // console.log(this.state.phoneNumbers);
+    // console.log(this.state.message);
     var phoneInputs = this.state.phoneNumbers.map((input, index) =>
 
       <Input key={index}
