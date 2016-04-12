@@ -52,29 +52,28 @@ class AboutView extends React.Component{
   }
 
     sendMessage() {
-    // modify the array to add a new entry
-    var currentPhoneNumbers = this.state.phoneNumbers;
-    var currentMessage = this.state.message;
-    console.log("Send Message");
-    console.log(currentMessage);
-    console.log(currentPhoneNumbers);
-    var datahash = {};
-    datahash["text[tonumber]"]='+19492903587';
-    datahash["text[fromnumber]"]='+14694163155';
-    datahash["text[message]"]=currentMessage;
-    var $ = require ('jquery')
-    $.ajax({
-    type: "POST",
-    url: 'http://ece590twilio.herokuapp.com/texts',
-    data: datahash,
-    dataType: 'json'
-    });
-  
-    
+      // modify the array to add a new entry
+      var currentPhoneNumbers = this.state.phoneNumbers;
+      var currentMessage = this.state.message;
+      console.log("Send Message");
+      console.log(currentMessage);
+      console.log(currentPhoneNumbers);
 
-    this.setState({
-      
-    });
+      currentPhoneNumbers.map((phoneNumber, index) => {
+        var datahash = {};
+        datahash["text[tonumber]"] = "+1" + phoneNumber.replace(/\D/g,'');
+        datahash["text[fromnumber]"] = '+14694163155';
+        datahash["text[message]"] = currentMessage;
+        var $ = require ('jquery')
+        $.ajax({
+          type: "POST",
+          url: 'http://ece590twilio.herokuapp.com/texts',
+          data: datahash,
+          dataType: 'json'
+        });
+      });
+
+
   }
 
   handleChange(e) {
