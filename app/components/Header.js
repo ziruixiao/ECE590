@@ -3,7 +3,6 @@ import { Button, Glyphicon, Input, Nav, Navbar, Image, NavItem, NavDropdown, Men
 
 class Header extends React.Component{
   render () {
-    var myUser = this.props.loggedInUser;
 
 
     return (
@@ -13,7 +12,7 @@ class Header extends React.Component{
           <Navbar.Header>
 
             <Navbar.Brand>
-              <a href='#'>{this.props.loggedInUser}</a>
+              <a href='#'>Group Texting</a>
             </Navbar.Brand>
             <Navbar.Toggle />
           </Navbar.Header>
@@ -23,6 +22,9 @@ class Header extends React.Component{
               <NavItem href='#' eventKey={3}>Terms of Use</NavItem>
               <NavItem href='#' eventKey={4}>Privacy</NavItem>
               <NavItem href='#' eventKey={5}>Contact</NavItem>
+            </Nav>
+            <Nav pullRight>
+              <NavItem>{this.props.loggedInUser}</NavItem>
             </Nav>
           </Navbar.Collapse>
         </Navbar>

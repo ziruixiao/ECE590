@@ -8,63 +8,61 @@ Row,
 Image,
 Button,
 Modal,
-Table
+Table,
+Well,
+ButtonToolbar,
+ButtonGroup
 } from 'react-bootstrap';
 
-var PhoneTextField = React.createClass({
-  getInitialState: function() {
-    return {value: this.props.placeholder};
-  },
-  handleChange: function(event) {
-    this.setState({value: event.target.value});
-  },
-  render: function() {
-    return (
-      <input
-        type="text"
-        value={this.state.value}
-        onChange={this.handleChange}
-      />
-    );
-  }
-});
 
 class HomeView extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-
+      actionType: props.actionType
     };
   }
 
   componentWillMount() {
-
+    if (this.props.loggedInUser != "") {
+      var router = this.context.router;
+      router.transitionTo('/groups', {});
+    }
   }
   componentWillUnmount() {
 
   }
-
-
-
   render(){
-    var myUser = this.props.loggedInUser;
-    var myButton = <Button>Empty Button</Button>;
 
-    if (myUser == "Oscar") {
-      myButton = <Button bsStyle="primary">Oscar: Add Phone Number</Button>;
-    } else {
-      myButton = <Button bsStyle="primary">Not Oscar: Add Phone Number</Button>;
-    }
+
     return (
       <div className="page-center-all">
         <br />
-        <br />
+
+        <Jumbotron className="jumbotron-main">
+          <h1>Group Texting</h1>
+
+          <br />
+          <p>Welcome to the Group Texting website, made by Felix Xiao and Oscar Wang. Please <b>login</b> or <b>register</b> below to get started.</p>
+          <br />
+
+          <ButtonGroup justified>
+            <ButtonGroup>
+              <Button>Login</Button>
+            </ButtonGroup>
+            <ButtonGroup>
+              <Button>Register</Button>
+            </ButtonGroup>
+          </ButtonGroup>
+          <br />
+          <Input type="text" placeholder="Username" />
+          <Input type="password" placeholder="Password" />
+
+          <Button block bsStyle="primary">Submit</Button>
+
+        </Jumbotron>
 
 
-      {myButton} 
-      <br /> 
-      <br />
-      <PhoneTextField placeholder="First phone number"/>
       
       </div>
     )
@@ -74,9 +72,11 @@ class HomeView extends React.Component{
 
 
 HomeView.propTypes = {
+  actionType: React.PropTypes.string
 };
 
 HomeView.defaultProps = {
+  actionType: "login"
 };
 
 HomeView.contextTypes = {

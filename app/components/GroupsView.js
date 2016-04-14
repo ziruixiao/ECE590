@@ -9,7 +9,7 @@ import {
 Jumbotron
 } from 'react-bootstrap';
 
-class ContactView extends React.Component{
+class GroupsView extends React.Component{
 
   render(){
     return (
@@ -20,4 +20,4 @@ class ContactView extends React.Component{
   }
 };
 
-export default ContactView;
+export default GroupsView;

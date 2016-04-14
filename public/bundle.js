@@ -22916,9 +22916,9 @@
 
 	var _componentsAboutView2 = _interopRequireDefault(_componentsAboutView);
 
-	var _componentsContactView = __webpack_require__(450);
+	var _componentsGroupsView = __webpack_require__(450);
 
-	var _componentsContactView2 = _interopRequireDefault(_componentsContactView);
+	var _componentsGroupsView2 = _interopRequireDefault(_componentsGroupsView);
 
 	var _componentsTermsView = __webpack_require__(451);
 
@@ -22932,7 +22932,7 @@
 	  _reactRouter.Route,
 	  { name: 'app', path: '/', handler: _componentsMain2['default'] },
 	  _react2['default'].createElement(_reactRouter.Route, { name: 'about', path: 'about', handler: _componentsAboutView2['default'] }),
-	  _react2['default'].createElement(_reactRouter.Route, { name: 'contact', path: 'contact', handler: _componentsContactView2['default'] }),
+	  _react2['default'].createElement(_reactRouter.Route, { name: 'groups', path: 'groups', handler: _componentsGroupsView2['default'] }),
 	  _react2['default'].createElement(_reactRouter.Route, { name: 'privacy', path: 'privacy', handler: _componentsPrivacyView2['default'] }),
 	  _react2['default'].createElement(_reactRouter.Route, { name: 'terms', path: 'terms', handler: _componentsTermsView2['default'] }),
 	  _react2['default'].createElement(_reactRouter.DefaultRoute, { handler: _componentsHomeView2['default'] })
@@ -23049,7 +23049,7 @@
 	};
 
 	Main.defaultProps = {
-	  loggedInUser: "notOscar"
+	  loggedInUser: ""
 	};
 
 	Main.contextTypes = {
@@ -23097,7 +23097,6 @@
 	  _createClass(Header, [{
 	    key: 'render',
 	    value: function render() {
-	      var myUser = this.props.loggedInUser;
 
 	      return _react2['default'].createElement(
 	        'div',
@@ -23114,7 +23113,7 @@
 	              _react2['default'].createElement(
 	                'a',
 	                { href: '#' },
-	                this.props.loggedInUser
+	                'Group Texting'
 	              )
 	            ),
 	            _react2['default'].createElement(_reactBootstrap.Navbar.Toggle, null)
@@ -23144,6 +23143,15 @@
 	                _reactBootstrap.NavItem,
 	                { href: '#', eventKey: 5 },
 	                'Contact'
+	              )
+	            ),
+	            _react2['default'].createElement(
+	              _reactBootstrap.Nav,
+	              { pullRight: true },
+	              _react2['default'].createElement(
+	                _reactBootstrap.NavItem,
+	                null,
+	                this.props.loggedInUser
 	              )
 	            )
 	          )
@@ -40102,24 +40110,6 @@
 
 	var _reactBootstrap = __webpack_require__(203);
 
-	var PhoneTextField = _react2['default'].createClass({
-	  displayName: 'PhoneTextField',
-
-	  getInitialState: function getInitialState() {
-	    return { value: this.props.placeholder };
-	  },
-	  handleChange: function handleChange(event) {
-	    this.setState({ value: event.target.value });
-	  },
-	  render: function render() {
-	    return _react2['default'].createElement('input', {
-	      type: 'text',
-	      value: this.state.value,
-	      onChange: this.handleChange
-	    });
-	  }
-	});
-
 	var HomeView = (function (_React$Component) {
 	  _inherits(HomeView, _React$Component);
 
@@ -40127,47 +40117,88 @@
 	    _classCallCheck(this, HomeView);
 
 	    _get(Object.getPrototypeOf(HomeView.prototype), 'constructor', this).call(this, props);
-	    this.state = {};
+	    this.state = {
+	      actionType: props.actionType
+	    };
 	  }
 
 	  _createClass(HomeView, [{
 	    key: 'componentWillMount',
-	    value: function componentWillMount() {}
+	    value: function componentWillMount() {
+	      if (this.props.loggedInUser != "") {
+	        var router = this.context.router;
+	        router.transitionTo('/groups', {});
+	      }
+	    }
 	  }, {
 	    key: 'componentWillUnmount',
 	    value: function componentWillUnmount() {}
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var myUser = this.props.loggedInUser;
-	      var myButton = _react2['default'].createElement(
-	        _reactBootstrap.Button,
-	        null,
-	        'Empty Button'
-	      );
 
-	      if (myUser == "Oscar") {
-	        myButton = _react2['default'].createElement(
-	          _reactBootstrap.Button,
-	          { bsStyle: 'primary' },
-	          'Oscar: Add Phone Number'
-	        );
-	      } else {
-	        myButton = _react2['default'].createElement(
-	          _reactBootstrap.Button,
-	          { bsStyle: 'primary' },
-	          'Not Oscar: Add Phone Number'
-	        );
-	      }
 	      return _react2['default'].createElement(
 	        'div',
 	        { className: 'page-center-all' },
 	        _react2['default'].createElement('br', null),
-	        _react2['default'].createElement('br', null),
-	        myButton,
-	        _react2['default'].createElement('br', null),
-	        _react2['default'].createElement('br', null),
-	        _react2['default'].createElement(PhoneTextField, { placeholder: 'First phone number' })
+	        _react2['default'].createElement(
+	          _reactBootstrap.Jumbotron,
+	          { className: 'jumbotron-main' },
+	          _react2['default'].createElement(
+	            'h1',
+	            null,
+	            'Group Texting'
+	          ),
+	          _react2['default'].createElement('br', null),
+	          _react2['default'].createElement(
+	            'p',
+	            null,
+	            'Welcome to the Group Texting website, made by Felix Xiao and Oscar Wang. Please ',
+	            _react2['default'].createElement(
+	              'b',
+	              null,
+	              'login'
+	            ),
+	            ' or ',
+	            _react2['default'].createElement(
+	              'b',
+	              null,
+	              'register'
+	            ),
+	            ' below to get started.'
+	          ),
+	          _react2['default'].createElement('br', null),
+	          _react2['default'].createElement(
+	            _reactBootstrap.ButtonGroup,
+	            { justified: true },
+	            _react2['default'].createElement(
+	              _reactBootstrap.ButtonGroup,
+	              null,
+	              _react2['default'].createElement(
+	                _reactBootstrap.Button,
+	                null,
+	                'Login'
+	              )
+	            ),
+	            _react2['default'].createElement(
+	              _reactBootstrap.ButtonGroup,
+	              null,
+	              _react2['default'].createElement(
+	                _reactBootstrap.Button,
+	                null,
+	                'Register'
+	              )
+	            )
+	          ),
+	          _react2['default'].createElement('br', null),
+	          _react2['default'].createElement(_reactBootstrap.Input, { type: 'text', placeholder: 'Username' }),
+	          _react2['default'].createElement(_reactBootstrap.Input, { type: 'password', placeholder: 'Password' }),
+	          _react2['default'].createElement(
+	            _reactBootstrap.Button,
+	            { block: true, bsStyle: 'primary' },
+	            'Submit'
+	          )
+	        )
 	      );
 	    }
 	  }]);
@@ -40177,9 +40208,13 @@
 
 	;
 
-	HomeView.propTypes = {};
+	HomeView.propTypes = {
+	  actionType: _react2['default'].PropTypes.string
+	};
 
-	HomeView.defaultProps = {};
+	HomeView.defaultProps = {
+	  actionType: "login"
+	};
 
 	HomeView.contextTypes = {
 	  router: _react2['default'].PropTypes.func.isRequired
@@ -50264,28 +50299,28 @@
 
 	var _reactBootstrap = __webpack_require__(203);
 
-	var ContactView = (function (_React$Component) {
-	  _inherits(ContactView, _React$Component);
+	var GroupsView = (function (_React$Component) {
+	  _inherits(GroupsView, _React$Component);
 
-	  function ContactView() {
-	    _classCallCheck(this, ContactView);
+	  function GroupsView() {
+	    _classCallCheck(this, GroupsView);
 
-	    _get(Object.getPrototypeOf(ContactView.prototype), 'constructor', this).apply(this, arguments);
+	    _get(Object.getPrototypeOf(GroupsView.prototype), 'constructor', this).apply(this, arguments);
 	  }
 
-	  _createClass(ContactView, [{
+	  _createClass(GroupsView, [{
 	    key: 'render',
 	    value: function render() {
 	      return _react2['default'].createElement('div', null);
 	    }
 	  }]);
 
-	  return ContactView;
+	  return GroupsView;
 	})(_react2['default'].Component);
 
 	;
 
-	exports['default'] = ContactView;
+	exports['default'] = GroupsView;
 	module.exports = exports['default'];
 
 /***/ },
