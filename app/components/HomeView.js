@@ -19,7 +19,9 @@ class HomeView extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      actionType: props.actionType
+      actionType: props.actionType,
+      alertVisible: props.alertVisible,
+      alertMessage: props.alertMessage
     };
   }
 
@@ -32,8 +34,37 @@ class HomeView extends React.Component{
   componentWillUnmount() {
 
   }
+  changeActionType(newAction) {
+    this.setState({
+      actionType: newAction
+    });
+  }
+  processLogin() {
+    var username = this.refs.username.getValue();
+    var password = this.refs.password.getValue();
+
+    if (username == "" || password == "") {
+      this.handleAlertShow("Please fill in all fields.");
+      return;
+    }
+
+  }
+  handleAlertDismiss() {
+    this.setState({
+      alertVisible: false
+    });
+  }
+  handleAlertShow(message) {
+    this.setState({
+      alertMessage: message,
+      alertVisible: true
+    });
+  }
   render(){
 
+    var alert = <Alert bsStyle="danger" onDismiss={this.handleAlertDismiss.bind(this)}>
+      {this.state.alertMessage}
+    </Alert>
 
     return (
       <div className="page-center-all">
@@ -46,19 +77,21 @@ class HomeView extends React.Component{
           <p>Welcome to the Group Texting website, made by Felix Xiao and Oscar Wang. Please <b>login</b> or <b>register</b> below to get started.</p>
           <br />
 
+
+          { this.state.alertVisible ? alert : <div></div>}
           <ButtonGroup justified>
             <ButtonGroup>
-              <Button>Login</Button>
+              <Button onClick={this.changeActionType.bind(this,"login")} bsStyle={this.state.actionType == "login" ? "success" : "default"}>Login</Button>
             </ButtonGroup>
             <ButtonGroup>
-              <Button>Register</Button>
+              <Button onClick={this.changeActionType.bind(this,"register")} bsStyle={this.state.actionType == "register" ? "success" : "default"}>Register</Button>
             </ButtonGroup>
           </ButtonGroup>
           <br />
-          <Input type="text" placeholder="Username" />
-          <Input type="password" placeholder="Password" />
+          <Input className="page-center-all" ref="username" type="text" placeholder="Username" />
+          <Input className="page-center-all" ref="password" type="password" placeholder="Password" />
 
-          <Button block bsStyle="primary">Submit</Button>
+          <Button onClick={this.processLogin.bind(this)} block bsStyle="primary">Submit</Button>
 
         </Jumbotron>
 
@@ -72,11 +105,15 @@ class HomeView extends React.Component{
 
 
 HomeView.propTypes = {
-  actionType: React.PropTypes.string
+  actionType: React.PropTypes.string,
+  alertVisible: React.PropTypes.bool,
+  alertMessage: React.PropTypes.string
 };
 
 HomeView.defaultProps = {
-  actionType: "login"
+  actionType: "login",
+  alertVisible: false,
+  alertMessage: ""
 };
 
 HomeView.contextTypes = {

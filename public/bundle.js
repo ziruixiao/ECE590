@@ -40118,7 +40118,9 @@
 
 	    _get(Object.getPrototypeOf(HomeView.prototype), 'constructor', this).call(this, props);
 	    this.state = {
-	      actionType: props.actionType
+	      actionType: props.actionType,
+	      alertVisible: props.alertVisible,
+	      alertMessage: props.alertMessage
 	    };
 	  }
 
@@ -40134,8 +40136,47 @@
 	    key: 'componentWillUnmount',
 	    value: function componentWillUnmount() {}
 	  }, {
+	    key: 'changeActionType',
+	    value: function changeActionType(newAction) {
+	      this.setState({
+	        actionType: newAction
+	      });
+	    }
+	  }, {
+	    key: 'processLogin',
+	    value: function processLogin() {
+	      var username = this.refs.username.getValue();
+	      var password = this.refs.password.getValue();
+
+	      if (username == "" || password == "") {
+	        this.handleAlertShow("Please fill in all fields.");
+	        return;
+	      }
+	    }
+	  }, {
+	    key: 'handleAlertDismiss',
+	    value: function handleAlertDismiss() {
+	      this.setState({
+	        alertVisible: false
+	      });
+	    }
+	  }, {
+	    key: 'handleAlertShow',
+	    value: function handleAlertShow(message) {
+	      this.setState({
+	        alertMessage: message,
+	        alertVisible: true
+	      });
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
+
+	      var alert = _react2['default'].createElement(
+	        _reactBootstrap.Alert,
+	        { bsStyle: 'danger', onDismiss: this.handleAlertDismiss.bind(this) },
+	        this.state.alertMessage
+	      );
 
 	      return _react2['default'].createElement(
 	        'div',
@@ -40168,6 +40209,7 @@
 	            ' below to get started.'
 	          ),
 	          _react2['default'].createElement('br', null),
+	          this.state.alertVisible ? alert : _react2['default'].createElement('div', null),
 	          _react2['default'].createElement(
 	            _reactBootstrap.ButtonGroup,
 	            { justified: true },
@@ -40176,7 +40218,7 @@
 	              null,
 	              _react2['default'].createElement(
 	                _reactBootstrap.Button,
-	                null,
+	                { onClick: this.changeActionType.bind(this, "login"), bsStyle: this.state.actionType == "login" ? "success" : "default" },
 	                'Login'
 	              )
 	            ),
@@ -40185,17 +40227,17 @@
 	              null,
 	              _react2['default'].createElement(
 	                _reactBootstrap.Button,
-	                null,
+	                { onClick: this.changeActionType.bind(this, "register"), bsStyle: this.state.actionType == "register" ? "success" : "default" },
 	                'Register'
 	              )
 	            )
 	          ),
 	          _react2['default'].createElement('br', null),
-	          _react2['default'].createElement(_reactBootstrap.Input, { type: 'text', placeholder: 'Username' }),
-	          _react2['default'].createElement(_reactBootstrap.Input, { type: 'password', placeholder: 'Password' }),
+	          _react2['default'].createElement(_reactBootstrap.Input, { className: 'page-center-all', ref: 'username', type: 'text', placeholder: 'Username' }),
+	          _react2['default'].createElement(_reactBootstrap.Input, { className: 'page-center-all', ref: 'password', type: 'password', placeholder: 'Password' }),
 	          _react2['default'].createElement(
 	            _reactBootstrap.Button,
-	            { block: true, bsStyle: 'primary' },
+	            { onClick: this.processLogin.bind(this), block: true, bsStyle: 'primary' },
 	            'Submit'
 	          )
 	        )
@@ -40209,11 +40251,15 @@
 	;
 
 	HomeView.propTypes = {
-	  actionType: _react2['default'].PropTypes.string
+	  actionType: _react2['default'].PropTypes.string,
+	  alertVisible: _react2['default'].PropTypes.bool,
+	  alertMessage: _react2['default'].PropTypes.string
 	};
 
 	HomeView.defaultProps = {
-	  actionType: "login"
+	  actionType: "login",
+	  alertVisible: false,
+	  alertMessage: ""
 	};
 
 	HomeView.contextTypes = {
