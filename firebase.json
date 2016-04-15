@@ -1,0 +1,9 @@
+{
+  "firebase": "ece-590",
+  "public": "public",
+  "ignore": [
+    "firebase.json",
+    "**/.*",
+    "**/node_modules/**"
+  ]
+}
