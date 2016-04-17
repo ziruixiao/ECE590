@@ -48,6 +48,12 @@ class HomeView extends React.Component{
       return;
     }
 
+    if (this.state.actionType=="register") {
+      this.props.register(username, password);
+    } else {
+      this.props.login(username, password);
+    }
+
   }
   handleAlertDismiss() {
     this.setState({
@@ -61,7 +67,7 @@ class HomeView extends React.Component{
     });
   }
   render(){
-
+    console.log(this.props);
     var alert = <Alert bsStyle="danger" onDismiss={this.handleAlertDismiss.bind(this)}>
       {this.state.alertMessage}
     </Alert>

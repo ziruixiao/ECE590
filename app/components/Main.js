@@ -1,6 +1,6 @@
 import React from 'react';
 import Header from './Header';
-import * as firebaseActions from './firebaseActions';
+import Firebase from 'firebase'
 import { RouteHandler } from 'react-router';
 import {
   Col,
@@ -12,11 +12,16 @@ class Main extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loggedInUser: props.loggedInUser
+      loggedInUser: props.loggedInUser,
+      userDataObject: props.userDataObject,
+      login: this.login.bind(this),
+      logout: this.logout.bind(this),
+      register: this.register.bind(this)
     };
   }
 
   init() {
+
   }
   componentWillMount() {
     this.router = this.context.router;
@@ -31,6 +36,51 @@ class Main extends React.Component {
 
   componentWillReceiveProps() {
     this.init();
+  }
+
+  login(username, password) {
+    new Firebase("https://ece-590.firebaseio.com/users").orderByChild("username")
+      .startAt(username)
+      .endAt(username)
+      .once('value', function(snap) {
+        if (snap.val() == null) {
+          window.alert('Login failed.');
+        } else {
+          var tempObject = snap.val()[Object.keys(snap.val())[0]];
+          if (tempObject["password"] == password) {
+            this.setState({
+              loggedInUser: tempObject["username"],
+              userDataObject: tempObject
+            }, function() {
+              var router = this.context.router;
+              router.transitionTo('/groups', {});
+            }.bind(this));
+          } else {
+            window.alert('Login failed.');
+          }
+        }
+      }.bind(this));
+  }
+
+  logout() {
+
+  }
+
+  register(username, password) {
+    new Firebase("https://ece-590.firebaseio.com/users").orderByChild("username")
+      .startAt(username)
+      .endAt(username)
+      .once('value', function(snap) {
+        if (snap.val() == null) {
+          console.log("username was not found, it's okay to register");
+
+          // TODO: Push a new user key
+
+        } else {
+          window.alert('This username is already taken.')
+        }
+      }.bind(this));
+
   }
 
   render() {
@@ -63,11 +113,20 @@ class Main extends React.Component {
 
 
 Main.propTypes = {
-  loggedInUser: React.PropTypes.string
+  loggedInUser: React.PropTypes.string,
+  userDataObject: React.PropTypes.object,
+  login: React.PropTypes.func,
+  logout: React.PropTypes.func,
+  register: React.PropTypes.func
+
 };
 
 Main.defaultProps = {
-  loggedInUser: ""
+  loggedInUser: "",
+  userDataObject: {},
+  login: (username,password) => {},
+  logout: () => {},
+  register: (username,password) => {}
 }
 
 Main.contextTypes = {

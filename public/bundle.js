@@ -22906,25 +22906,25 @@
 
 	var _componentsMain2 = _interopRequireDefault(_componentsMain);
 
-	var _componentsHomeView = __webpack_require__(449);
+	var _componentsHomeView = __webpack_require__(448);
 
 	var _componentsHomeView2 = _interopRequireDefault(_componentsHomeView);
 
 	var _reactRouter = __webpack_require__(158);
 
-	var _componentsAboutView = __webpack_require__(450);
+	var _componentsAboutView = __webpack_require__(449);
 
 	var _componentsAboutView2 = _interopRequireDefault(_componentsAboutView);
 
-	var _componentsGroupsView = __webpack_require__(452);
+	var _componentsGroupsView = __webpack_require__(451);
 
 	var _componentsGroupsView2 = _interopRequireDefault(_componentsGroupsView);
 
-	var _componentsTermsView = __webpack_require__(453);
+	var _componentsTermsView = __webpack_require__(452);
 
 	var _componentsTermsView2 = _interopRequireDefault(_componentsTermsView);
 
-	var _componentsPrivacyView = __webpack_require__(454);
+	var _componentsPrivacyView = __webpack_require__(453);
 
 	var _componentsPrivacyView2 = _interopRequireDefault(_componentsPrivacyView);
 
@@ -22953,8 +22953,6 @@
 
 	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
-
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
@@ -22969,9 +22967,9 @@
 
 	var _Header2 = _interopRequireDefault(_Header);
 
-	var _firebaseActions = __webpack_require__(447);
+	var _firebase = __webpack_require__(447);
 
-	var firebaseActions = _interopRequireWildcard(_firebaseActions);
+	var _firebase2 = _interopRequireDefault(_firebase);
 
 	var _reactRouter = __webpack_require__(158);
 
@@ -22985,7 +22983,11 @@
 
 	    _get(Object.getPrototypeOf(Main.prototype), 'constructor', this).call(this, props);
 	    this.state = {
-	      loggedInUser: props.loggedInUser
+	      loggedInUser: props.loggedInUser,
+	      userDataObject: props.userDataObject,
+	      login: this.login.bind(this),
+	      logout: this.logout.bind(this),
+	      register: this.register.bind(this)
 	    };
 	  }
 
@@ -23007,6 +23009,44 @@
 	    key: 'componentWillReceiveProps',
 	    value: function componentWillReceiveProps() {
 	      this.init();
+	    }
+	  }, {
+	    key: 'login',
+	    value: function login(username, password) {
+	      new _firebase2['default']("https://ece-590.firebaseio.com/users").orderByChild("username").startAt(username).endAt(username).once('value', (function (snap) {
+	        if (snap.val() == null) {
+	          window.alert('Login failed.');
+	        } else {
+	          var tempObject = snap.val()[Object.keys(snap.val())[0]];
+	          if (tempObject["password"] == password) {
+	            this.setState({
+	              loggedInUser: tempObject["username"],
+	              userDataObject: tempObject
+	            }, (function () {
+	              var router = this.context.router;
+	              router.transitionTo('/groups', {});
+	            }).bind(this));
+	          } else {
+	            window.alert('Login failed.');
+	          }
+	        }
+	      }).bind(this));
+	    }
+	  }, {
+	    key: 'logout',
+	    value: function logout() {}
+	  }, {
+	    key: 'register',
+	    value: function register(username, password) {
+	      new _firebase2['default']("https://ece-590.firebaseio.com/users").orderByChild("username").startAt(username).endAt(username).once('value', (function (snap) {
+	        if (snap.val() == null) {
+	          console.log("username was not found, it's okay to register");
+
+	          // TODO: Push a new user key
+	        } else {
+	            window.alert('This username is already taken.');
+	          }
+	      }).bind(this));
 	    }
 	  }, {
 	    key: 'render',
@@ -23051,11 +23091,20 @@
 	;
 
 	Main.propTypes = {
-	  loggedInUser: _react2['default'].PropTypes.string
+	  loggedInUser: _react2['default'].PropTypes.string,
+	  userDataObject: _react2['default'].PropTypes.object,
+	  login: _react2['default'].PropTypes.func,
+	  logout: _react2['default'].PropTypes.func,
+	  register: _react2['default'].PropTypes.func
+
 	};
 
 	Main.defaultProps = {
-	  loggedInUser: ""
+	  loggedInUser: "",
+	  userDataObject: {},
+	  login: function login(username, password) {},
+	  logout: function logout() {},
+	  register: function register(username, password) {}
 	};
 
 	Main.contextTypes = {
@@ -40092,23 +40141,6 @@
 
 /***/ },
 /* 447 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Created by Felix on 4/14/16.
-	 */
-	'use strict';
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	var _firebase = __webpack_require__(448);
-
-	var _firebase2 = _interopRequireDefault(_firebase);
-
-	var sessionRef = new _firebase2['default']('https://ece-590.firebaseio.com/sessions/');
-
-/***/ },
-/* 448 */
 /***/ function(module, exports) {
 
 	/*! @license Firebase v2.4.2
@@ -40394,7 +40426,7 @@
 
 
 /***/ },
-/* 449 */
+/* 448 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -40461,6 +40493,12 @@
 	        this.handleAlertShow("Please fill in all fields.");
 	        return;
 	      }
+
+	      if (this.state.actionType == "register") {
+	        this.props.register(username, password);
+	      } else {
+	        this.props.login(username, password);
+	      }
 	    }
 	  }, {
 	    key: 'handleAlertDismiss',
@@ -40480,7 +40518,7 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
-
+	      console.log(this.props);
 	      var alert = _react2['default'].createElement(
 	        _reactBootstrap.Alert,
 	        { bsStyle: 'danger', onDismiss: this.handleAlertDismiss.bind(this) },
@@ -40579,7 +40617,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 450 */
+/* 449 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -40675,7 +40713,7 @@
 	        datahash["text[tonumber]"] = "+1" + phoneNumber.replace(/\D/g, '');
 	        datahash["text[fromnumber]"] = '+14694163155';
 	        datahash["text[message]"] = currentMessage;
-	        var $ = __webpack_require__(451);
+	        var $ = __webpack_require__(450);
 	        $.ajax({
 	          type: "POST",
 	          url: 'http://ece590twilio.herokuapp.com/texts',
@@ -40778,7 +40816,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 451 */
+/* 450 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -50626,7 +50664,7 @@
 
 
 /***/ },
-/* 452 */
+/* 451 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -50679,7 +50717,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 453 */
+/* 452 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -50736,7 +50774,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 454 */
+/* 453 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
