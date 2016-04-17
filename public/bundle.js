@@ -50749,7 +50749,8 @@
 	    _get(Object.getPrototypeOf(GroupsView.prototype), 'constructor', this).call(this, props);
 
 	    this.state = {
-	      message: props.message
+	      message: props.message,
+	      activeGroups: props.activeGroups
 	    };
 	  }
 
@@ -50763,10 +50764,10 @@
 	    key: 'init',
 	    value: function init() {}
 	  }, {
-	    key: 'addNewGroup',
-	    value: function addNewGroup() {
+	    key: 'goToEditPage',
+	    value: function goToEditPage(editId) {
 	      var router = this.context.router;
-	      router.transitionTo('edit', { groupId: '-1' });
+	      router.transitionTo('edit', { groupId: editId });
 	    }
 	  }, {
 	    key: 'saveMessage',
@@ -50774,6 +50775,21 @@
 	      var currentMessage = e.target.value;
 	      this.setState({
 	        message: currentMessage
+	      });
+	    }
+	  }, {
+	    key: 'selectGroup',
+	    value: function selectGroup(groupId, shouldAdd) {
+	      var copiedArray = this.state.activeGroups;
+	      var index = copiedArray.indexOf(groupId);
+	      if (index >= 0) {
+	        copiedArray.splice(index, 1);
+	      }
+	      if (shouldAdd) {
+	        copiedArray.push(groupId);
+	      }
+	      this.setState({
+	        activeGroups: copiedArray
 	      });
 	    }
 	  }, {
@@ -50806,13 +50822,40 @@
 	    value: function render() {
 	      var _this = this;
 
+	      console.log(this.state);
+
 	      var groupTiles = this.props.userDataObject ? this.props.userDataObject["groups"] ? Object.keys(this.props.userDataObject["groups"]).map(function (key) {
 	        return _react2['default'].createElement(
 	          _reactBootstrap.Col,
 	          { className: 'group-display-column', key: key, xs: 6 },
 	          _react2['default'].createElement(
 	            _reactBootstrap.Panel,
-	            { header: _this.props.userDataObject["groups"][key]["name"], bsStyle: 'default' },
+	            { header: _this.props.userDataObject["groups"][key]["name"], bsStyle: _this.state.activeGroups.indexOf(key) >= 0 ? "success" : "default", footer: _react2['default'].createElement(
+	                _reactBootstrap.ButtonGroup,
+	                { justified: true },
+	                _react2['default'].createElement(
+	                  _reactBootstrap.ButtonGroup,
+	                  null,
+	                  _react2['default'].createElement(
+	                    _reactBootstrap.Button,
+	                    { onClick: _this.goToEditPage.bind(_this, key), bsSize: 'small', bsStyle: 'warning' },
+	                    _react2['default'].createElement(_reactBootstrap.Glyphicon, { glyph: 'edit' })
+	                  )
+	                ),
+	                _react2['default'].createElement(
+	                  _reactBootstrap.ButtonGroup,
+	                  null,
+	                  _this.state.activeGroups.indexOf(key) >= 0 ? _react2['default'].createElement(
+	                    _reactBootstrap.Button,
+	                    { onClick: _this.selectGroup.bind(_this, key, false), bsSize: 'small', bsStyle: 'danger' },
+	                    'Unselect'
+	                  ) : _react2['default'].createElement(
+	                    _reactBootstrap.Button,
+	                    { onClick: _this.selectGroup.bind(_this, key, true), bsSize: 'small', bsStyle: 'success' },
+	                    'Select'
+	                  )
+	                )
+	              ) },
 	            'Panel content'
 	          )
 	        );
@@ -50839,7 +50882,7 @@
 	            { xs: 12 },
 	            _react2['default'].createElement(
 	              _reactBootstrap.Button,
-	              { className: 'group-display-column-inner', onClick: this.addNewGroup.bind(this), bsStyle: 'info', bsSize: 'medium', block: true, justified: true },
+	              { className: 'group-display-column-inner', onClick: this.goToEditPage.bind(this, -1), bsStyle: 'info', block: true, justified: true },
 	              _react2['default'].createElement(_reactBootstrap.Glyphicon, { glyph: 'plus' }),
 	              ' ',
 	              'New Group'
@@ -50856,7 +50899,9 @@
 	            { onClick: this.sendMessage.bind(this), bsStyle: 'info' },
 	            'Send Message'
 	          )
-	        )
+	        ),
+	        _react2['default'].createElement('br', null),
+	        _react2['default'].createElement('br', null)
 	      );
 	    }
 	  }]);
@@ -50867,11 +50912,13 @@
 	;
 
 	GroupsView.propTypes = {
-	  message: _react2['default'].PropTypes.string
+	  message: _react2['default'].PropTypes.string,
+	  activeGroups: _react2['default'].PropTypes.array
 	};
 
 	GroupsView.defaultProps = {
-	  message: ""
+	  message: "",
+	  activeGroups: []
 	};
 
 	GroupsView.contextTypes = {
@@ -50992,6 +51039,8 @@
 	      };
 
 	      firebaseActions.addOrUpdateGroup(this.props.loggedInUser, this.router.getCurrentParams().groupId, payload);
+	      var router = this.context.router;
+	      router.transitionTo('/groups', {});
 	    }
 	  }, {
 	    key: 'handleChange',

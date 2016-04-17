@@ -74,6 +74,8 @@ class EditView extends React.Component{
     }
 
     firebaseActions.addOrUpdateGroup(this.props.loggedInUser, this.router.getCurrentParams().groupId, payload);
+    var router = this.context.router;
+    router.transitionTo('/groups', {});
   }
   handleChange(e) {
     var currentPhoneNumbers = this.state.phoneNumbers;
