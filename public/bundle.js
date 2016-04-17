@@ -22920,7 +22920,7 @@
 
 	var _componentsGroupsView2 = _interopRequireDefault(_componentsGroupsView);
 
-	var _componentsEditView = __webpack_require__(452);
+	var _componentsEditView = __webpack_require__(453);
 
 	var _componentsEditView2 = _interopRequireDefault(_componentsEditView);
 
@@ -50728,6 +50728,8 @@
 
 	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
@@ -50739,6 +50741,10 @@
 	var _react2 = _interopRequireDefault(_react);
 
 	var _reactBootstrap = __webpack_require__(203);
+
+	var _twilioActions = __webpack_require__(452);
+
+	var twilioActions = _interopRequireWildcard(_twilioActions);
 
 	var GroupsView = (function (_React$Component) {
 	  _inherits(GroupsView, _React$Component);
@@ -50795,34 +50801,24 @@
 	  }, {
 	    key: 'sendMessage',
 	    value: function sendMessage() {
-	      // modify the array to add a new entry
-	      /*
-	      var currentPhoneNumbers = this.state.phoneNumbers;
-	      var currentMessage = this.state.message;
-	      console.log("Send Message");
-	      console.log(currentMessage);
-	      console.log(currentPhoneNumbers);
-	       currentPhoneNumbers.map((phoneNumber, index) => {
-	        var datahash = {};
-	        datahash["text[tonumber]"] = "+1" + phoneNumber.replace(/\D/g,'');
-	        datahash["text[fromnumber]"] = '+14694163155';
-	        datahash["text[message]"] = currentMessage;
-	        var $ = require ('jquery')
-	        $.ajax({
-	          type: "POST",
-	          url: 'http://ece590twilio.herokuapp.com/texts',
-	          data: datahash,
-	          dataType: 'json'
-	        });
-	      });*/
+	      var _this = this;
 
+	      this.state.activeGroups.map(function (input, index) {
+
+	        var iterateGroup = _this.props.userDataObject["groups"][input]["numbers"];
+	        iterateGroup.map(function (input2, index2) {
+	          twilioActions.sendMessage(_this.state.message, input2);
+	        });
+	      });
+	      this.setState({
+	        activeGroups: [],
+	        message: ""
+	      });
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _this = this;
-
-	      console.log(this.state);
+	      var _this2 = this;
 
 	      var groupTiles = this.props.userDataObject ? this.props.userDataObject["groups"] ? Object.keys(this.props.userDataObject["groups"]).map(function (key) {
 	        return _react2['default'].createElement(
@@ -50830,7 +50826,7 @@
 	          { className: 'group-display-column', key: key, xs: 6 },
 	          _react2['default'].createElement(
 	            _reactBootstrap.Panel,
-	            { header: _this.props.userDataObject["groups"][key]["name"], bsStyle: _this.state.activeGroups.indexOf(key) >= 0 ? "success" : "default", footer: _react2['default'].createElement(
+	            { header: _this2.props.userDataObject["groups"][key]["name"], bsStyle: _this2.state.activeGroups.indexOf(key) >= 0 ? "success" : "default", footer: _react2['default'].createElement(
 	                _reactBootstrap.ButtonGroup,
 	                { justified: true },
 	                _react2['default'].createElement(
@@ -50838,20 +50834,20 @@
 	                  null,
 	                  _react2['default'].createElement(
 	                    _reactBootstrap.Button,
-	                    { onClick: _this.goToEditPage.bind(_this, key), bsSize: 'small', bsStyle: 'warning' },
+	                    { onClick: _this2.goToEditPage.bind(_this2, key), bsSize: 'small', bsStyle: 'warning' },
 	                    _react2['default'].createElement(_reactBootstrap.Glyphicon, { glyph: 'edit' })
 	                  )
 	                ),
 	                _react2['default'].createElement(
 	                  _reactBootstrap.ButtonGroup,
 	                  null,
-	                  _this.state.activeGroups.indexOf(key) >= 0 ? _react2['default'].createElement(
+	                  _this2.state.activeGroups.indexOf(key) >= 0 ? _react2['default'].createElement(
 	                    _reactBootstrap.Button,
-	                    { onClick: _this.selectGroup.bind(_this, key, false), bsSize: 'small', bsStyle: 'danger' },
+	                    { onClick: _this2.selectGroup.bind(_this2, key, false), bsSize: 'small', bsStyle: 'danger' },
 	                    'Unselect'
 	                  ) : _react2['default'].createElement(
 	                    _reactBootstrap.Button,
-	                    { onClick: _this.selectGroup.bind(_this, key, true), bsSize: 'small', bsStyle: 'success' },
+	                    { onClick: _this2.selectGroup.bind(_this2, key, true), bsSize: 'small', bsStyle: 'success' },
 	                    'Select'
 	                  )
 	                )
@@ -50862,6 +50858,7 @@
 	      }) : _react2['default'].createElement('div', null) : _react2['default'].createElement('div', null);
 
 	      var messageInput = _react2['default'].createElement(_reactBootstrap.Input, { type: 'text',
+	        value: this.state.message,
 	        onChange: this.saveMessage.bind(this),
 	        placeholder: 'Enter message' });
 	      return _react2['default'].createElement(
@@ -50933,6 +50930,34 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
+	 * Created by Felix on 4/17/16.
+	 */
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var sendMessage = function sendMessage(message, toPhone) {
+	  var datahash = {};
+	  datahash["text[tonumber]"] = "+1" + toPhone.replace(/\D/g, '');
+	  datahash["text[fromnumber]"] = '+14694163155';
+	  datahash["text[message]"] = message;
+	  var $ = __webpack_require__(450);
+	  $.ajax({
+	    type: "POST",
+	    url: 'http://ece590twilio.herokuapp.com/texts',
+	    data: datahash,
+	    dataType: 'json'
+	  });
+	};
+	exports.sendMessage = sendMessage;
+
+/***/ },
+/* 453 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
 	 * Created by Felix on 1/8/16.
 	 */
 	'use strict';
@@ -50959,7 +50984,7 @@
 
 	var _reactBootstrap = __webpack_require__(203);
 
-	var _firebaseActions = __webpack_require__(453);
+	var _firebaseActions = __webpack_require__(454);
 
 	var firebaseActions = _interopRequireWildcard(_firebaseActions);
 
@@ -51149,7 +51174,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 453 */
+/* 454 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**

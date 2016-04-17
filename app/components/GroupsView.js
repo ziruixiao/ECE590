@@ -13,6 +13,8 @@ Row,
 ButtonGroup
 } from 'react-bootstrap';
 
+import * as twilioActions from '../twilioActions';
+
 class GroupsView extends React.Component{
   constructor(props) {
     super(props);
@@ -55,32 +57,24 @@ class GroupsView extends React.Component{
 
   }
   sendMessage() {
-    // modify the array to add a new entry
-    /*
-    var currentPhoneNumbers = this.state.phoneNumbers;
-    var currentMessage = this.state.message;
-    console.log("Send Message");
-    console.log(currentMessage);
-    console.log(currentPhoneNumbers);
 
-    currentPhoneNumbers.map((phoneNumber, index) => {
-      var datahash = {};
-      datahash["text[tonumber]"] = "+1" + phoneNumber.replace(/\D/g,'');
-      datahash["text[fromnumber]"] = '+14694163155';
-      datahash["text[message]"] = currentMessage;
-      var $ = require ('jquery')
-      $.ajax({
-        type: "POST",
-        url: 'http://ece590twilio.herokuapp.com/texts',
-        data: datahash,
-        dataType: 'json'
+    this.state.activeGroups.map((input, index) => {
+
+      var iterateGroup = this.props.userDataObject["groups"][input]["numbers"];
+      iterateGroup.map((input2, index2) => {
+        twilioActions.sendMessage(this.state.message, input2);
       });
-    });*/
+
+    });
+    this.setState({
+      activeGroups: [],
+      message: ""
+    });
+
 
 
   }
   render(){
-    console.log(this.state);
 
     var groupTiles = this.props.userDataObject ? this.props.userDataObject["groups"] ? Object.keys(this.props.userDataObject["groups"]).map((key)=>
       <Col className="group-display-column" key={key} xs={6}>
@@ -107,6 +101,7 @@ class GroupsView extends React.Component{
     ) : <div></div> : <div></div>;
 
     var messageInput = (<Input type='text'
+                               value={this.state.message}
                                onChange={this.saveMessage.bind(this)}
                                placeholder='Enter message'/>);
     return (
