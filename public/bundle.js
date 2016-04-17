@@ -22928,6 +22928,10 @@
 
 	var _componentsPrivacyView2 = _interopRequireDefault(_componentsPrivacyView);
 
+	var _componentsEditView = __webpack_require__(454);
+
+	var _componentsEditView2 = _interopRequireDefault(_componentsEditView);
+
 	exports['default'] = _react2['default'].createElement(
 	  _reactRouter.Route,
 	  { name: 'app', path: '/', handler: _componentsMain2['default'] },
@@ -22935,6 +22939,7 @@
 	  _react2['default'].createElement(_reactRouter.Route, { name: 'groups', path: 'groups', handler: _componentsGroupsView2['default'] }),
 	  _react2['default'].createElement(_reactRouter.Route, { name: 'privacy', path: 'privacy', handler: _componentsPrivacyView2['default'] }),
 	  _react2['default'].createElement(_reactRouter.Route, { name: 'terms', path: 'terms', handler: _componentsTermsView2['default'] }),
+	  _react2['default'].createElement(_reactRouter.Route, { name: 'edit', path: 'edit/:groupId', handler: _componentsEditView2['default'] }),
 	  _react2['default'].createElement(_reactRouter.DefaultRoute, { handler: _componentsHomeView2['default'] })
 	);
 	module.exports = exports['default'];
@@ -23088,7 +23093,6 @@
 	        if (snap.val() == null) {
 	          console.log("username was not found, it's okay to register");
 
-	          // TODO: Push a new user key
 	          var payload = {
 	            groups: {},
 	            password: password,
@@ -23111,7 +23115,6 @@
 	          alert("Sorry, a user could not be registered." + error);
 	        } else {
 	          console.log('new user registered');
-	          console.log(newChildRef.key());
 	          this.linkSessionToFirebase(newChildRef.key());
 	        }
 	      }).bind(this));
@@ -40595,7 +40598,6 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      console.log(this.props);
 	      var alert = _react2['default'].createElement(
 	        _reactBootstrap.Alert,
 	        { bsStyle: 'danger', onDismiss: this.handleAlertDismiss.bind(this) },
@@ -50779,9 +50781,41 @@
 	  }
 
 	  _createClass(GroupsView, [{
+	    key: 'addNewGroup',
+	    value: function addNewGroup() {
+	      var router = this.context.router;
+	      router.transitionTo('edit', { groupId: '-1' });
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
-	      return _react2['default'].createElement('div', null);
+	      return _react2['default'].createElement(
+	        'div',
+	        { className: 'page-center-all' },
+	        _react2['default'].createElement('br', null),
+	        _react2['default'].createElement(
+	          _reactBootstrap.Jumbotron,
+	          { className: 'jumbotron-main' },
+	          _react2['default'].createElement(
+	            'h2',
+	            null,
+	            'My Groups'
+	          ),
+	          _react2['default'].createElement('br', null),
+	          _react2['default'].createElement(
+	            _reactBootstrap.Col,
+	            { xs: 6 },
+	            _react2['default'].createElement(
+	              _reactBootstrap.Button,
+	              { onClick: this.addNewGroup.bind(this), bsStyle: 'info', bsSize: 'large', block: true, justified: true },
+	              _react2['default'].createElement(_reactBootstrap.Glyphicon, { glyph: 'plus' }),
+	              ' ',
+	              'New Group'
+	            )
+	          ),
+	          _react2['default'].createElement('br', null)
+	        )
+	      );
 	    }
 	  }]);
 
@@ -50789,6 +50823,10 @@
 	})(_react2['default'].Component);
 
 	;
+
+	GroupsView.contextTypes = {
+	  router: _react2['default'].PropTypes.func.isRequired
+	};
 
 	exports['default'] = GroupsView;
 	module.exports = exports['default'];
@@ -50911,6 +50949,286 @@
 
 	exports['default'] = PrivacyView;
 	module.exports = exports['default'];
+
+/***/ },
+/* 454 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Created by Felix on 1/8/16.
+	 */
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactBootstrap = __webpack_require__(203);
+
+	var _firebaseActions = __webpack_require__(455);
+
+	var firebaseActions = _interopRequireWildcard(_firebaseActions);
+
+	var EditView = (function (_React$Component) {
+	  _inherits(EditView, _React$Component);
+
+	  function EditView(props) {
+	    _classCallCheck(this, EditView);
+
+	    _get(Object.getPrototypeOf(EditView.prototype), 'constructor', this).call(this, props);
+
+	    this.state = {
+	      phoneNumbers: props.phoneNumbers,
+	      groupName: props.groupName
+	    };
+	  }
+
+	  _createClass(EditView, [{
+	    key: 'init',
+	    value: function init() {
+	      var groupId = this.router.getCurrentParams().groupId;
+	      if (groupId != -1) {
+	        // brand new group
+	        this.setState({});
+	      } else {// need to load existing data
+
+	      }
+	    }
+	  }, {
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {
+	      this.router = this.context.router;
+	    }
+	  }, {
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      this.init();
+	    }
+	  }, {
+	    key: 'componentWillUnmount',
+	    value: function componentWillUnmount() {}
+	  }, {
+	    key: 'componentWillReceiveProps',
+	    value: function componentWillReceiveProps() {}
+	  }, {
+	    key: 'addField',
+	    value: function addField() {
+	      // modify the array to add a new entry
+	      var currentPhoneNumbers = this.state.phoneNumbers;
+	      currentPhoneNumbers.push("");
+	      this.setState({
+	        phoneNumbers: currentPhoneNumbers
+	      });
+	    }
+	  }, {
+	    key: 'removeField',
+	    value: function removeField(index) {
+	      var currentPhoneNumbers = this.state.phoneNumbers;
+	      currentPhoneNumbers.splice(index, 1);
+	      this.setState({
+	        phoneNumbers: currentPhoneNumbers
+	      });
+	    }
+	  }, {
+	    key: 'saveGroup',
+	    value: function saveGroup() {
+	      var payload = {
+	        name: this.state.groupName,
+	        numbers: this.state.phoneNumbers
+	      };
+
+	      firebaseActions.addOrUpdateGroup(this.props.loggedInUser, this.router.getCurrentParams().groupId, payload);
+	      // TODO: After it's done, go to groups page
+	    }
+	  }, {
+	    key: 'handleChange',
+	    value: function handleChange(e) {
+	      var currentPhoneNumbers = this.state.phoneNumbers;
+	      currentPhoneNumbers[e.target.name] = e.target.value;
+	      this.setState({
+	        phoneNumbers: currentPhoneNumbers
+	      });
+	    }
+	  }, {
+	    key: 'saveName',
+	    value: function saveName(e) {
+	      var currentName = e.target.value;
+	      this.setState({
+	        groupName: currentName
+	      });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this = this;
+
+	      var phoneInputs = this.state.phoneNumbers.map(function (input, index) {
+	        return _react2['default'].createElement(_reactBootstrap.Input, { key: index,
+	          name: index,
+	          type: 'text',
+	          placeholder: 'Enter phone number',
+	          value: input,
+	          onChange: _this.handleChange.bind(_this),
+	          buttonAfter: _react2['default'].createElement(
+	            _reactBootstrap.Button,
+	            { onClick: _this.removeField.bind(_this, index), bsStyle: 'danger' },
+	            _react2['default'].createElement(_reactBootstrap.Glyphicon, { glyph: 'remove' })
+	          )
+	        });
+	      });
+	      var nameInput = _react2['default'].createElement(_reactBootstrap.Input, { type: 'text',
+	        value: this.state.groupName, onChange: this.saveName.bind(this),
+	        placeholder: 'Group Name' });
+
+	      return _react2['default'].createElement(
+	        'div',
+	        { className: 'page-center-all' },
+	        _react2['default'].createElement('br', null),
+	        _react2['default'].createElement(
+	          _reactBootstrap.Jumbotron,
+	          { className: 'jumbotron-main' },
+	          _react2['default'].createElement(
+	            'h2',
+	            null,
+	            'Add/Edit Group'
+	          ),
+	          _react2['default'].createElement('br', null),
+	          nameInput,
+	          _react2['default'].createElement(
+	            'div',
+	            { className: 'phone-inputs' },
+	            phoneInputs
+	          ),
+	          _react2['default'].createElement('br', null),
+	          _react2['default'].createElement(
+	            _reactBootstrap.Col,
+	            { xs: 6 },
+	            _react2['default'].createElement(
+	              _reactBootstrap.Button,
+	              { justified: true, block: true, onClick: this.addField.bind(this), bsStyle: 'info' },
+	              'Add Phone Number'
+	            )
+	          ),
+	          _react2['default'].createElement(
+	            _reactBootstrap.Col,
+	            { xs: 6 },
+	            _react2['default'].createElement(
+	              _reactBootstrap.Button,
+	              { justified: true, block: true, onClick: this.saveGroup.bind(this), bsStyle: 'info' },
+	              'Save Group'
+	            )
+	          ),
+	          _react2['default'].createElement('br', null)
+	        )
+	      );
+	    }
+	  }]);
+
+	  return EditView;
+	})(_react2['default'].Component);
+
+	;
+
+	EditView.propTypes = {
+	  phoneNumbers: _react2['default'].PropTypes.array,
+	  groupName: _react2['default'].PropTypes.string
+	};
+
+	EditView.defaultProps = {
+	  phoneNumbers: [],
+	  groupName: ""
+	};
+
+	EditView.contextTypes = {
+	  router: _react2['default'].PropTypes.func.isRequired
+	};
+
+	exports['default'] = EditView;
+	module.exports = exports['default'];
+
+/***/ },
+/* 455 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Created by Felix on 4/17/16.
+	 */
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _firebase = __webpack_require__(447);
+
+	var _firebase2 = _interopRequireDefault(_firebase);
+
+	var usersRef = new _firebase2['default']('https://ece-590.firebaseio.com/users/');
+
+	var registerUser = function registerUser(username, password) {
+	  //
+	  var payload = {
+	    groups: {},
+	    password: password,
+	    username: username
+	  };
+
+	  var newChildRef = usersRef.push();
+	  newChildRef.set(payload, function (error) {
+	    if (error) {
+	      alert("Sorry, a user could not be registered." + error);
+	    } else {
+	      console.log('new user registered');
+	    }
+	  });
+	};
+
+	exports.registerUser = registerUser;
+	var addOrUpdateGroup = function addOrUpdateGroup(userId, editGroupId, dictionary) {
+	  var groupsRef = new _firebase2['default']('https://ece-590.firebaseio.com/users/' + userId + '/groups');
+	  var payload = dictionary;
+	  if (editGroupId == -1) {
+	    // new rushee
+
+	    var newChildRef = groupsRef.push();
+	    newChildRef.set(payload, function (error) {
+	      if (error) {
+	        alert("Sorry, the information could not be updated." + error);
+	      } else {
+	        console.log("A group has been added.");
+	      }
+	    });
+	  } else {
+	    // update group
+	    var childRef = groupsRef.child(editGroupId);
+	    childRef.update(payload, function (error) {
+	      if (error) {
+	        alert("Sorry, the information could not be updated." + error);
+	      } else {
+	        console.log("A group has been updated.");
+	      }
+	    });
+	  }
+	};
+	exports.addOrUpdateGroup = addOrUpdateGroup;
 
 /***/ }
 /******/ ]);

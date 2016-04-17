@@ -67,7 +67,6 @@ class HomeView extends React.Component{
     });
   }
   render(){
-    console.log(this.props);
     var alert = <Alert bsStyle="danger" onDismiss={this.handleAlertDismiss.bind(this)}>
       {this.state.alertMessage}
     </Alert>

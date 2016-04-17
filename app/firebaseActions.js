@@ -23,3 +23,29 @@ export const registerUser = (username, password) => { //
   });
 
 }
+
+export const addOrUpdateGroup = (userId, editGroupId, dictionary) => {
+  var groupsRef = new Firebase('https://ece-590.firebaseio.com/users/' + userId + '/groups');
+  var payload = dictionary;
+  if (editGroupId == -1) { // new rushee
+
+    var newChildRef = groupsRef.push();
+    newChildRef.set(payload, function(error) {
+      if (error) {
+        alert("Sorry, the information could not be updated." + error);
+      } else {
+        console.log("A group has been added.");
+      }
+    });
+
+  } else { // update group
+    var childRef = groupsRef.child(editGroupId);
+    childRef.update(payload, function(error) {
+      if (error) {
+        alert("Sorry, the information could not be updated." + error);
+      } else {
+        console.log("A group has been updated.");
+      }
+    });
+  }
+}
