@@ -8,6 +8,8 @@ import {
 
 } from 'react-bootstrap';
 
+const SESSION_EXPIRE_TIME = 60 * 60; // currently set to 1 hour
+
 class Main extends React.Component {
   constructor(props) {
     super(props);
@@ -21,10 +23,54 @@ class Main extends React.Component {
   }
 
   init() {
+    var storedExpiration = localStorage.getItem('sessionExpiration');
+    var storedUser = localStorage.getItem('sessionUser');
+    console.log(storedExpiration);
+    console.log(storedUser);
+    var currentTime = Number(Date.now());
+    console.log(currentTime - storedExpiration);
+    if (storedExpiration && storedUser) {
+      if (currentTime - storedExpiration > SESSION_EXPIRE_TIME) {
+        this.linkSessionToFirebase('kill');
+      } else {
+        console.log('need to update');
+        this.linkSessionToFirebase(storedUser);
+      }
+    }
+  }
 
+  linkSessionToFirebase(sessionUser) {
+    if (sessionUser == 'kill') {
+      localStorage.clear();
+      this.setState({
+        loggedInUser: "",
+        userDataObject: {}
+      });
+    } else {
+      localStorage.setItem('sessionUser', sessionUser);
+      var expireTime = Number(Date.now()) + SESSION_EXPIRE_TIME;
+      localStorage.setItem('sessionExpiration', expireTime);
+
+      this.setupFirebaseConnections(sessionUser);
+
+    }
+  }
+  setupFirebaseConnections(sessionUser) {
+    var usersRef = new Firebase('https://ece-590.firebaseio.com/users/' + sessionUser);
+    usersRef.on('value', function(dataSnapshot) {
+      this.setState({
+        userDataObject: dataSnapshot.val(),
+        loggedInUser: sessionUser
+      }, function() {
+        var router = this.context.router;
+        router.transitionTo('/groups', {});
+      }.bind(this));
+      console.log("FIREBASE ONCE CALL MADE FOR USERS VALUE");
+    }.bind(this));
   }
   componentWillMount() {
     this.router = this.context.router;
+    this.init();
   }
 
   componentDidMount() {
@@ -35,7 +81,7 @@ class Main extends React.Component {
   }
 
   componentWillReceiveProps() {
-    this.init();
+
   }
 
   login(username, password) {
@@ -48,13 +94,7 @@ class Main extends React.Component {
         } else {
           var tempObject = snap.val()[Object.keys(snap.val())[0]];
           if (tempObject["password"] == password) {
-            this.setState({
-              loggedInUser: tempObject["username"],
-              userDataObject: tempObject
-            }, function() {
-              var router = this.context.router;
-              router.transitionTo('/groups', {});
-            }.bind(this));
+            this.linkSessionToFirebase(Object.keys(snap.val())[0]);
           } else {
             window.alert('Login failed.');
           }

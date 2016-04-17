@@ -22975,6 +22975,8 @@
 
 	var _reactBootstrap = __webpack_require__(203);
 
+	var SESSION_EXPIRE_TIME = 60 * 60; // currently set to 1 hour
+
 	var Main = (function (_React$Component) {
 	  _inherits(Main, _React$Component);
 
@@ -22993,11 +22995,59 @@
 
 	  _createClass(Main, [{
 	    key: 'init',
-	    value: function init() {}
+	    value: function init() {
+	      var storedExpiration = localStorage.getItem('sessionExpiration');
+	      var storedUser = localStorage.getItem('sessionUser');
+	      console.log(storedExpiration);
+	      console.log(storedUser);
+	      var currentTime = Number(Date.now());
+	      console.log(currentTime - storedExpiration);
+	      if (storedExpiration && storedUser) {
+	        if (currentTime - storedExpiration > SESSION_EXPIRE_TIME) {
+	          this.linkSessionToFirebase('kill');
+	        } else {
+	          console.log('need to update');
+	          this.linkSessionToFirebase(storedUser);
+	        }
+	      }
+	    }
+	  }, {
+	    key: 'linkSessionToFirebase',
+	    value: function linkSessionToFirebase(sessionUser) {
+	      if (sessionUser == 'kill') {
+	        localStorage.clear();
+	        this.setState({
+	          loggedInUser: "",
+	          userDataObject: {}
+	        });
+	      } else {
+	        localStorage.setItem('sessionUser', sessionUser);
+	        var expireTime = Number(Date.now()) + SESSION_EXPIRE_TIME;
+	        localStorage.setItem('sessionExpiration', expireTime);
+
+	        this.setupFirebaseConnections(sessionUser);
+	      }
+	    }
+	  }, {
+	    key: 'setupFirebaseConnections',
+	    value: function setupFirebaseConnections(sessionUser) {
+	      var usersRef = new _firebase2['default']('https://ece-590.firebaseio.com/users/' + sessionUser);
+	      usersRef.on('value', (function (dataSnapshot) {
+	        this.setState({
+	          userDataObject: dataSnapshot.val(),
+	          loggedInUser: sessionUser
+	        }, (function () {
+	          var router = this.context.router;
+	          router.transitionTo('/groups', {});
+	        }).bind(this));
+	        console.log("FIREBASE ONCE CALL MADE FOR USERS VALUE");
+	      }).bind(this));
+	    }
 	  }, {
 	    key: 'componentWillMount',
 	    value: function componentWillMount() {
 	      this.router = this.context.router;
+	      this.init();
 	    }
 	  }, {
 	    key: 'componentDidMount',
@@ -23007,9 +23057,7 @@
 	    value: function componentWillUnmount() {}
 	  }, {
 	    key: 'componentWillReceiveProps',
-	    value: function componentWillReceiveProps() {
-	      this.init();
-	    }
+	    value: function componentWillReceiveProps() {}
 	  }, {
 	    key: 'login',
 	    value: function login(username, password) {
@@ -23019,13 +23067,7 @@
 	        } else {
 	          var tempObject = snap.val()[Object.keys(snap.val())[0]];
 	          if (tempObject["password"] == password) {
-	            this.setState({
-	              loggedInUser: tempObject["username"],
-	              userDataObject: tempObject
-	            }, (function () {
-	              var router = this.context.router;
-	              router.transitionTo('/groups', {});
-	            }).bind(this));
+	            this.linkSessionToFirebase(Object.keys(snap.val())[0]);
 	          } else {
 	            window.alert('Login failed.');
 	          }
