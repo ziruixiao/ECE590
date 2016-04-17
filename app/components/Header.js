@@ -4,6 +4,10 @@ import { Button, Glyphicon, Input, Nav, Navbar, Image, NavItem, NavDropdown, Men
 class Header extends React.Component{
   render () {
 
+    var loggedInNav = <Nav onSelect={handleSelect.bind(this)} pullRight>
+      <NavItem href='#'>{this.props.loggedInUser}</NavItem>
+      <NavItem href='#' eventKey={6}>Logout</NavItem>
+    </Nav>;
 
     return (
       <div>
@@ -23,9 +27,7 @@ class Header extends React.Component{
               <NavItem href='#' eventKey={4}>Privacy</NavItem>
               <NavItem href='#' eventKey={5}>Contact</NavItem>
             </Nav>
-            <Nav pullRight>
-              <NavItem>{this.props.loggedInUser}</NavItem>
-            </Nav>
+            {this.props.loggedInUser != "" ? loggedInNav : <div></div>}
           </Navbar.Collapse>
         </Navbar>
         
@@ -46,6 +48,8 @@ function handleSelect(selectedKey) {
     router.transitionTo('privacy',{});
   } else if (selectedKey == 5) {
     router.transitionTo('contact',{});
+  } else if (selectedKey == 6) {
+    this.props.logout();
   }
 }
 

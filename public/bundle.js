@@ -22975,7 +22975,7 @@
 
 	var _reactBootstrap = __webpack_require__(203);
 
-	var SESSION_EXPIRE_TIME = 60 * 60; // currently set to 1 hour
+	var SESSION_EXPIRE_TIME = 60 * 60 * 1000; // currently set to 1 hour
 
 	var Main = (function (_React$Component) {
 	  _inherits(Main, _React$Component);
@@ -22998,15 +22998,11 @@
 	    value: function init() {
 	      var storedExpiration = localStorage.getItem('sessionExpiration');
 	      var storedUser = localStorage.getItem('sessionUser');
-	      console.log(storedExpiration);
-	      console.log(storedUser);
 	      var currentTime = Number(Date.now());
-	      console.log(currentTime - storedExpiration);
 	      if (storedExpiration && storedUser) {
 	        if (currentTime - storedExpiration > SESSION_EXPIRE_TIME) {
 	          this.linkSessionToFirebase('kill');
 	        } else {
-	          console.log('need to update');
 	          this.linkSessionToFirebase(storedUser);
 	        }
 	      }
@@ -23040,7 +23036,6 @@
 	          var router = this.context.router;
 	          router.transitionTo('/groups', {});
 	        }).bind(this));
-	        console.log("FIREBASE ONCE CALL MADE FOR USERS VALUE");
 	      }).bind(this));
 	    }
 	  }, {
@@ -23076,10 +23071,19 @@
 	    }
 	  }, {
 	    key: 'logout',
-	    value: function logout() {}
+	    value: function logout() {
+	      this.linkSessionToFirebase('kill');
+	      var router = this.context.router;
+	      router.transitionTo('/', {});
+	    }
 	  }, {
 	    key: 'register',
 	    value: function register(username, password) {
+	      if (username == "kill") {
+	        window.alert('This username is already taken.');
+	        return;
+	      }
+
 	      new _firebase2['default']("https://ece-590.firebaseio.com/users").orderByChild("username").startAt(username).endAt(username).once('value', (function (snap) {
 	        if (snap.val() == null) {
 	          console.log("username was not found, it's okay to register");
@@ -23096,7 +23100,7 @@
 	      return _react2['default'].createElement(
 	        'div',
 	        { className: 'main-container' },
-	        _react2['default'].createElement(_Header2['default'], { loggedInUser: this.state.loggedInUser }),
+	        _react2['default'].createElement(_Header2['default'], { logout: this.state.logout, loggedInUser: this.state.userDataObject["username"] || '' }),
 	        _react2['default'].createElement('br', null),
 	        _react2['default'].createElement('br', null),
 	        _react2['default'].createElement('br', null),
@@ -23195,6 +23199,21 @@
 	    key: 'render',
 	    value: function render() {
 
+	      var loggedInNav = _react2['default'].createElement(
+	        _reactBootstrap.Nav,
+	        { onSelect: handleSelect.bind(this), pullRight: true },
+	        _react2['default'].createElement(
+	          _reactBootstrap.NavItem,
+	          { href: '#' },
+	          this.props.loggedInUser
+	        ),
+	        _react2['default'].createElement(
+	          _reactBootstrap.NavItem,
+	          { href: '#', eventKey: 6 },
+	          'Logout'
+	        )
+	      );
+
 	      return _react2['default'].createElement(
 	        'div',
 	        null,
@@ -23242,15 +23261,7 @@
 	                'Contact'
 	              )
 	            ),
-	            _react2['default'].createElement(
-	              _reactBootstrap.Nav,
-	              { pullRight: true },
-	              _react2['default'].createElement(
-	                _reactBootstrap.NavItem,
-	                null,
-	                this.props.loggedInUser
-	              )
-	            )
+	            this.props.loggedInUser != "" ? loggedInNav : _react2['default'].createElement('div', null)
 	          )
 	        )
 	      );
@@ -23274,6 +23285,8 @@
 	    router.transitionTo('privacy', {});
 	  } else if (selectedKey == 5) {
 	    router.transitionTo('contact', {});
+	  } else if (selectedKey == 6) {
+	    this.props.logout();
 	  }
 	}
 

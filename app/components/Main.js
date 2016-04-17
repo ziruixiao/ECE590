@@ -8,7 +8,7 @@ import {
 
 } from 'react-bootstrap';
 
-const SESSION_EXPIRE_TIME = 60 * 60; // currently set to 1 hour
+const SESSION_EXPIRE_TIME = 60 * 60 * 1000; // currently set to 1 hour
 
 class Main extends React.Component {
   constructor(props) {
@@ -25,15 +25,11 @@ class Main extends React.Component {
   init() {
     var storedExpiration = localStorage.getItem('sessionExpiration');
     var storedUser = localStorage.getItem('sessionUser');
-    console.log(storedExpiration);
-    console.log(storedUser);
     var currentTime = Number(Date.now());
-    console.log(currentTime - storedExpiration);
     if (storedExpiration && storedUser) {
       if (currentTime - storedExpiration > SESSION_EXPIRE_TIME) {
         this.linkSessionToFirebase('kill');
       } else {
-        console.log('need to update');
         this.linkSessionToFirebase(storedUser);
       }
     }
@@ -65,7 +61,6 @@ class Main extends React.Component {
         var router = this.context.router;
         router.transitionTo('/groups', {});
       }.bind(this));
-      console.log("FIREBASE ONCE CALL MADE FOR USERS VALUE");
     }.bind(this));
   }
   componentWillMount() {
@@ -103,10 +98,17 @@ class Main extends React.Component {
   }
 
   logout() {
-
+    this.linkSessionToFirebase('kill');
+    var router = this.context.router;
+    router.transitionTo('/', {});
   }
 
   register(username, password) {
+    if (username=="kill") {
+      window.alert('This username is already taken.');
+      return;
+    }
+
     new Firebase("https://ece-590.firebaseio.com/users").orderByChild("username")
       .startAt(username)
       .endAt(username)
@@ -117,7 +119,7 @@ class Main extends React.Component {
           // TODO: Push a new user key
 
         } else {
-          window.alert('This username is already taken.')
+          window.alert('This username is already taken.');
         }
       }.bind(this));
 
@@ -126,7 +128,7 @@ class Main extends React.Component {
   render() {
     return (
       <div className="main-container">
-        <Header loggedInUser={this.state.loggedInUser}/>
+        <Header logout={this.state.logout} loggedInUser={this.state.userDataObject["username"] || ''}/>
         <br />
         <br />
         <br />
