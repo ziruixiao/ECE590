@@ -50789,6 +50789,9 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
+
+	      var groupTiles = _react2['default'].createElement(_reactBootstrap.Col, { xs: 6 });
+
 	      return _react2['default'].createElement(
 	        'div',
 	        { className: 'page-center-all' },
@@ -50813,6 +50816,7 @@
 	              'New Group'
 	            )
 	          ),
+	          groupTiles,
 	          _react2['default'].createElement('br', null)
 	        )
 	      );
@@ -51005,9 +51009,16 @@
 	      var groupId = this.router.getCurrentParams().groupId;
 	      if (groupId != -1) {
 	        // brand new group
-	        this.setState({});
-	      } else {// need to load existing data
 
+	        if (this.props.userDataObject["groups"]) {
+	          var thisGroup = this.props.userDataObject["groups"][groupId];
+	          if (thisGroup) {
+	            this.setState({
+	              phoneNumbers: thisGroup["numbers"],
+	              groupName: thisGroup["name"]
+	            });
+	          }
+	        }
 	      }
 	    }
 	  }, {
@@ -51054,7 +51065,6 @@
 	      };
 
 	      firebaseActions.addOrUpdateGroup(this.props.loggedInUser, this.router.getCurrentParams().groupId, payload);
-	      // TODO: After it's done, go to groups page
 	    }
 	  }, {
 	    key: 'handleChange',

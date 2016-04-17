@@ -24,10 +24,16 @@ class EditView extends React.Component{
   init() {
     var groupId = this.router.getCurrentParams().groupId;
     if (groupId != -1) { // brand new group
-      this.setState({
 
-      });
-    } else { // need to load existing data
+      if (this.props.userDataObject["groups"]) {
+        var thisGroup = this.props.userDataObject["groups"][groupId];
+        if (thisGroup) {
+          this.setState({
+            phoneNumbers: thisGroup["numbers"],
+            groupName: thisGroup["name"]
+          });
+        }
+      }
 
     }
   }

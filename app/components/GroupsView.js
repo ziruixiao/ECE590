@@ -17,6 +17,13 @@ class GroupsView extends React.Component{
     router.transitionTo('edit', {groupId: '-1'});
   }
   render(){
+
+    var groupTiles =
+      <Col xs={6}>
+
+      </Col>;
+
+
     return (
       <div className="page-center-all">
         <br />
@@ -29,6 +36,7 @@ class GroupsView extends React.Component{
           <Col xs={6}>
             <Button onClick={this.addNewGroup.bind(this)} bsStyle="info" bsSize="large" block justified><Glyphicon glyph="plus" />{ ' ' }New Group</Button>
           </Col>
+          {groupTiles}
 
           <br />
 
