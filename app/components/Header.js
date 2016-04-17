@@ -23,9 +23,6 @@ class Header extends React.Component{
           <Navbar.Collapse>
             <Nav onSelect={handleSelect.bind(this)}>
               <NavItem href='#' eventKey={2}>About</NavItem>
-              <NavItem href='#' eventKey={3}>Terms of Use</NavItem>
-              <NavItem href='#' eventKey={4}>Privacy</NavItem>
-              <NavItem href='#' eventKey={5}>Contact</NavItem>
             </Nav>
             {this.props.loggedInUser != "" ? loggedInNav : <div></div>}
           </Navbar.Collapse>
@@ -42,12 +39,6 @@ function handleSelect(selectedKey) {
     router.transitionTo('/', {});
   } else if (selectedKey == 2) {
     router.transitionTo('about',{});
-  } else if (selectedKey == 3) {
-    router.transitionTo('terms',{});
-  } else if (selectedKey == 4) {
-    router.transitionTo('privacy',{});
-  } else if (selectedKey == 5) {
-    router.transitionTo('contact',{});
   } else if (selectedKey == 6) {
     this.props.logout();
   }

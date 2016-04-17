@@ -24,3 +24,13 @@ body {
     background-size: cover;
     background-repeat: no-repeat;
 }
+
+.group-display-column {
+    height: 100px;
+    display: table;
+}
+
+.group-display-column-inner {
+    display: table-cell;
+    vertical-align: middle;
+}

@@ -22920,15 +22920,7 @@
 
 	var _componentsGroupsView2 = _interopRequireDefault(_componentsGroupsView);
 
-	var _componentsTermsView = __webpack_require__(452);
-
-	var _componentsTermsView2 = _interopRequireDefault(_componentsTermsView);
-
-	var _componentsPrivacyView = __webpack_require__(453);
-
-	var _componentsPrivacyView2 = _interopRequireDefault(_componentsPrivacyView);
-
-	var _componentsEditView = __webpack_require__(454);
+	var _componentsEditView = __webpack_require__(452);
 
 	var _componentsEditView2 = _interopRequireDefault(_componentsEditView);
 
@@ -22937,8 +22929,6 @@
 	  { name: 'app', path: '/', handler: _componentsMain2['default'] },
 	  _react2['default'].createElement(_reactRouter.Route, { name: 'about', path: 'about', handler: _componentsAboutView2['default'] }),
 	  _react2['default'].createElement(_reactRouter.Route, { name: 'groups', path: 'groups', handler: _componentsGroupsView2['default'] }),
-	  _react2['default'].createElement(_reactRouter.Route, { name: 'privacy', path: 'privacy', handler: _componentsPrivacyView2['default'] }),
-	  _react2['default'].createElement(_reactRouter.Route, { name: 'terms', path: 'terms', handler: _componentsTermsView2['default'] }),
 	  _react2['default'].createElement(_reactRouter.Route, { name: 'edit', path: 'edit/:groupId', handler: _componentsEditView2['default'] }),
 	  _react2['default'].createElement(_reactRouter.DefaultRoute, { handler: _componentsHomeView2['default'] })
 	);
@@ -23269,21 +23259,6 @@
 	                _reactBootstrap.NavItem,
 	                { href: '#', eventKey: 2 },
 	                'About'
-	              ),
-	              _react2['default'].createElement(
-	                _reactBootstrap.NavItem,
-	                { href: '#', eventKey: 3 },
-	                'Terms of Use'
-	              ),
-	              _react2['default'].createElement(
-	                _reactBootstrap.NavItem,
-	                { href: '#', eventKey: 4 },
-	                'Privacy'
-	              ),
-	              _react2['default'].createElement(
-	                _reactBootstrap.NavItem,
-	                { href: '#', eventKey: 5 },
-	                'Contact'
 	              )
 	            ),
 	            this.props.loggedInUser != "" ? loggedInNav : _react2['default'].createElement('div', null)
@@ -23304,12 +23279,6 @@
 	    router.transitionTo('/', {});
 	  } else if (selectedKey == 2) {
 	    router.transitionTo('about', {});
-	  } else if (selectedKey == 3) {
-	    router.transitionTo('terms', {});
-	  } else if (selectedKey == 4) {
-	    router.transitionTo('privacy', {});
-	  } else if (selectedKey == 5) {
-	    router.transitionTo('contact', {});
 	  } else if (selectedKey == 6) {
 	    this.props.logout();
 	  }
@@ -50774,24 +50743,84 @@
 	var GroupsView = (function (_React$Component) {
 	  _inherits(GroupsView, _React$Component);
 
-	  function GroupsView() {
+	  function GroupsView(props) {
 	    _classCallCheck(this, GroupsView);
 
-	    _get(Object.getPrototypeOf(GroupsView.prototype), 'constructor', this).apply(this, arguments);
+	    _get(Object.getPrototypeOf(GroupsView.prototype), 'constructor', this).call(this, props);
+
+	    this.state = {
+	      message: props.message
+	    };
 	  }
 
 	  _createClass(GroupsView, [{
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {
+	      this.router = this.context.router;
+	      this.init();
+	    }
+	  }, {
+	    key: 'init',
+	    value: function init() {}
+	  }, {
 	    key: 'addNewGroup',
 	    value: function addNewGroup() {
 	      var router = this.context.router;
 	      router.transitionTo('edit', { groupId: '-1' });
 	    }
 	  }, {
+	    key: 'saveMessage',
+	    value: function saveMessage(e) {
+	      var currentMessage = e.target.value;
+	      this.setState({
+	        message: currentMessage
+	      });
+	    }
+	  }, {
+	    key: 'sendMessage',
+	    value: function sendMessage() {
+	      // modify the array to add a new entry
+	      /*
+	      var currentPhoneNumbers = this.state.phoneNumbers;
+	      var currentMessage = this.state.message;
+	      console.log("Send Message");
+	      console.log(currentMessage);
+	      console.log(currentPhoneNumbers);
+	       currentPhoneNumbers.map((phoneNumber, index) => {
+	        var datahash = {};
+	        datahash["text[tonumber]"] = "+1" + phoneNumber.replace(/\D/g,'');
+	        datahash["text[fromnumber]"] = '+14694163155';
+	        datahash["text[message]"] = currentMessage;
+	        var $ = require ('jquery')
+	        $.ajax({
+	          type: "POST",
+	          url: 'http://ece590twilio.herokuapp.com/texts',
+	          data: datahash,
+	          dataType: 'json'
+	        });
+	      });*/
+
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var _this = this;
 
-	      var groupTiles = _react2['default'].createElement(_reactBootstrap.Col, { xs: 6 });
+	      var groupTiles = this.props.userDataObject ? this.props.userDataObject["groups"] ? Object.keys(this.props.userDataObject["groups"]).map(function (key) {
+	        return _react2['default'].createElement(
+	          _reactBootstrap.Col,
+	          { className: 'group-display-column', key: key, xs: 6 },
+	          _react2['default'].createElement(
+	            _reactBootstrap.Panel,
+	            { header: _this.props.userDataObject["groups"][key]["name"], bsStyle: 'default' },
+	            'Panel content'
+	          )
+	        );
+	      }) : _react2['default'].createElement('div', null) : _react2['default'].createElement('div', null);
 
+	      var messageInput = _react2['default'].createElement(_reactBootstrap.Input, { type: 'text',
+	        onChange: this.saveMessage.bind(this),
+	        placeholder: 'Enter message' });
 	      return _react2['default'].createElement(
 	        'div',
 	        { className: 'page-center-all' },
@@ -50807,17 +50836,26 @@
 	          _react2['default'].createElement('br', null),
 	          _react2['default'].createElement(
 	            _reactBootstrap.Col,
-	            { xs: 6 },
+	            { xs: 12 },
 	            _react2['default'].createElement(
 	              _reactBootstrap.Button,
-	              { onClick: this.addNewGroup.bind(this), bsStyle: 'info', bsSize: 'large', block: true, justified: true },
+	              { className: 'group-display-column-inner', onClick: this.addNewGroup.bind(this), bsStyle: 'info', bsSize: 'medium', block: true, justified: true },
 	              _react2['default'].createElement(_reactBootstrap.Glyphicon, { glyph: 'plus' }),
 	              ' ',
 	              'New Group'
 	            )
 	          ),
+	          _react2['default'].createElement('br', null),
+	          _react2['default'].createElement('br', null),
+	          _react2['default'].createElement('br', null),
 	          groupTiles,
-	          _react2['default'].createElement('br', null)
+	          messageInput,
+	          _react2['default'].createElement('br', null),
+	          _react2['default'].createElement(
+	            _reactBootstrap.Button,
+	            { onClick: this.sendMessage.bind(this), bsStyle: 'info' },
+	            'Send Message'
+	          )
 	        )
 	      );
 	    }
@@ -50828,6 +50866,14 @@
 
 	;
 
+	GroupsView.propTypes = {
+	  message: _react2['default'].PropTypes.string
+	};
+
+	GroupsView.defaultProps = {
+	  message: ""
+	};
+
 	GroupsView.contextTypes = {
 	  router: _react2['default'].PropTypes.func.isRequired
 	};
@@ -50837,125 +50883,6 @@
 
 /***/ },
 /* 452 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Created by Felix on 1/8/16.
-	 */
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactBootstrap = __webpack_require__(203);
-
-	var TermsView = (function (_React$Component) {
-	  _inherits(TermsView, _React$Component);
-
-	  function TermsView() {
-	    _classCallCheck(this, TermsView);
-
-	    _get(Object.getPrototypeOf(TermsView.prototype), 'constructor', this).apply(this, arguments);
-	  }
-
-	  _createClass(TermsView, [{
-	    key: 'render',
-	    value: function render() {
-	      return _react2['default'].createElement(
-	        'div',
-	        null,
-	        'Terms View'
-	      );
-	    }
-	  }]);
-
-	  return TermsView;
-	})(_react2['default'].Component);
-
-	;
-
-	exports['default'] = TermsView;
-	module.exports = exports['default'];
-
-/***/ },
-/* 453 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Created by Felix on 3/8/16.
-	 */
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactBootstrap = __webpack_require__(203);
-
-	var PrivacyView = (function (_React$Component) {
-	  _inherits(PrivacyView, _React$Component);
-
-	  function PrivacyView() {
-	    _classCallCheck(this, PrivacyView);
-
-	    _get(Object.getPrototypeOf(PrivacyView.prototype), 'constructor', this).apply(this, arguments);
-	  }
-
-	  _createClass(PrivacyView, [{
-	    key: 'componentWillMount',
-	    value: function componentWillMount() {}
-	  }, {
-	    key: 'componentDidMount',
-	    value: function componentDidMount() {}
-	  }, {
-	    key: 'componentWillUnmount',
-	    value: function componentWillUnmount() {}
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      return _react2['default'].createElement('div', null);
-	    }
-	  }]);
-
-	  return PrivacyView;
-	})(_react2['default'].Component);
-
-	;
-
-	exports['default'] = PrivacyView;
-	module.exports = exports['default'];
-
-/***/ },
-/* 454 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -50985,7 +50912,7 @@
 
 	var _reactBootstrap = __webpack_require__(203);
 
-	var _firebaseActions = __webpack_require__(455);
+	var _firebaseActions = __webpack_require__(453);
 
 	var firebaseActions = _interopRequireWildcard(_firebaseActions);
 
@@ -51173,7 +51100,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 455 */
+/* 453 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
