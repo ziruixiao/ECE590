@@ -23089,9 +23089,31 @@
 	          console.log("username was not found, it's okay to register");
 
 	          // TODO: Push a new user key
+	          var payload = {
+	            groups: {},
+	            password: password,
+	            username: username
+	          };
+	          this.completeRegistration(payload);
 	        } else {
-	            window.alert('This username is already taken.');
-	          }
+	          window.alert('This username is already taken.');
+	        }
+	      }).bind(this));
+	    }
+	  }, {
+	    key: 'completeRegistration',
+	    value: function completeRegistration(payload) {
+	      var usersRef = new _firebase2['default']('https://ece-590.firebaseio.com/users/');
+	      var newChildRef = usersRef.push();
+
+	      newChildRef.set(payload, (function (error) {
+	        if (error) {
+	          alert("Sorry, a user could not be registered." + error);
+	        } else {
+	          console.log('new user registered');
+	          console.log(newChildRef.key());
+	          this.linkSessionToFirebase(newChildRef.key());
+	        }
 	      }).bind(this));
 	    }
 	  }, {
