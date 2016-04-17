@@ -77,7 +77,7 @@ class GroupsView extends React.Component{
   render(){
 
     var groupTiles = this.props.userDataObject ? this.props.userDataObject["groups"] ? Object.keys(this.props.userDataObject["groups"]).map((key)=>
-      <Col className="group-display-column" key={key} xs={6}>
+      <Col className="group-display-column" key={key} xs={12} sm={6}>
 
         <Panel header={this.props.userDataObject["groups"][key]["name"]} bsStyle={
 

@@ -21,9 +21,6 @@ class Header extends React.Component{
             <Navbar.Toggle />
           </Navbar.Header>
           <Navbar.Collapse>
-            <Nav onSelect={handleSelect.bind(this)}>
-              <NavItem href='#' eventKey={2}>About</NavItem>
-            </Nav>
             {this.props.loggedInUser != "" ? loggedInNav : <div></div>}
           </Navbar.Collapse>
         </Navbar>
@@ -37,8 +34,6 @@ function handleSelect(selectedKey) {
   var router = this.context.router;
   if (selectedKey == 1) {
     router.transitionTo('/', {});
-  } else if (selectedKey == 2) {
-    router.transitionTo('about',{});
   } else if (selectedKey == 6) {
     this.props.logout();
   }
