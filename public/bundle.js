@@ -40789,7 +40789,14 @@
 	                  )
 	                )
 	              ) },
-	            'Panel content'
+	            _react2['default'].createElement(
+	              'b',
+	              null,
+	              _this2.props.userDataObject["groups"][key]["numbers"].length
+	            ),
+	            ' ',
+	            ' ',
+	            'numbers'
 	          )
 	        );
 	      }) : _react2['default'].createElement('div', null) : _react2['default'].createElement('div', null);

@@ -95,7 +95,9 @@ class GroupsView extends React.Component{
 
             </ButtonGroup>
         </ButtonGroup>}>
-          Panel content
+
+          <b>{this.props.userDataObject["groups"][key]["numbers"].length}</b> {' '}numbers
+
         </Panel>
       </Col>
     ) : <div></div> : <div></div>;
